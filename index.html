@@ -428,15 +428,6 @@
                         <label>上傳頭貼</label>
                         <input type="file" id="reg-avatar" class="form-control" accept="image/*">
                     </div>
-                    <div class="form-group">
-                        <label>驗證防護主題</label>
-                        <select id="reg-2fa-theme" class="form-control">
-                            <option value="cat">貓咪</option>
-                            <option value="dog">狗狗</option>
-                            <option value="bird">鳥類</option>
-                            <option value="car">汽車</option>
-                        </select>
-                    </div>
                     <button class="btn" style="width: 100%;" onclick="register()">註冊</button>
                 </div>
             </div>
@@ -571,7 +562,6 @@
             const name = document.getElementById('reg-name').value.trim();
             const pwd = document.getElementById('reg-pwd').value;
             const fileInput = document.getElementById('reg-avatar');
-            const themeInput = document.getElementById('reg-2fa-theme');
 
             if (!id || !name || !pwd) return alert('請填寫完整註冊資訊');
             if (users.find(u => u.id === id)) return alert('此 ID 已被註冊！');
@@ -581,7 +571,7 @@
                 avatarData = await fileToBase64(fileInput.files[0]);
             }
 
-            const newUser = { id, name, pwd, avatar: avatarData, theme: themeInput.value };
+            const newUser = { id, name, pwd, avatar: avatarData };
             users.push(newUser);
             setDB('pet_users', users);
 
@@ -614,38 +604,39 @@
 
         let captchaSelected = [];
         let captchaCorrectIndices = [];
+        let currentTargetThemeName = '';
 
         const themeData = {
-            'cat': {
-                name: '貓咪',
-                urls: [
-                    'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop',
-                    'https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=200&h=200&fit=crop',
-                    'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?w=200&h=200&fit=crop'
-                ]
-            },
             'dog': {
                 name: '狗狗',
                 urls: [
-                    'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=200&h=200&fit=crop',
-                    'https://images.unsplash.com/photo-1537151608804-ea2f1d71df0c?w=200&h=200&fit=crop',
-                    'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=200&h=200&fit=crop'
-                ]
-            },
-            'bird': {
-                name: '鳥類',
-                urls: [
-                    'https://images.unsplash.com/photo-1552728089-57169ab00a09?w=200&h=200&fit=crop',
-                    'https://images.unsplash.com/photo-1444464666168-49d621881bac?w=200&h=200&fit=crop',
-                    'https://images.unsplash.com/photo-1522926193341-e9eb1b36bb86?w=200&h=200&fit=crop'
+                    'https://picsum.photos/id/237/200/200',
+                    'https://picsum.photos/id/1025/200/200',
+                    'https://picsum.photos/id/1062/200/200'
                 ]
             },
             'car': {
                 name: '汽車',
                 urls: [
-                    'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&h=200&fit=crop',
-                    'https://images.unsplash.com/photo-1503376760367-13eea36b04eb?w=200&h=200&fit=crop',
-                    'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=200&h=200&fit=crop'
+                    'https://picsum.photos/id/111/200/200',
+                    'https://picsum.photos/id/133/200/200',
+                    'https://picsum.photos/id/183/200/200'
+                ]
+            },
+            'building': {
+                name: '建築物',
+                urls: [
+                    'https://picsum.photos/id/122/200/200',
+                    'https://picsum.photos/id/164/200/200',
+                    'https://picsum.photos/id/1040/200/200'
+                ]
+            },
+            'mountain': {
+                name: '山脈',
+                urls: [
+                    'https://picsum.photos/id/10/200/200',
+                    'https://picsum.photos/id/29/200/200',
+                    'https://picsum.photos/id/124/200/200'
                 ]
             }
         };
@@ -659,9 +650,10 @@
             captchaSelected = [];
             captchaCorrectIndices = [];
 
-            let userTheme = pendingUser.theme || 'cat';
-            let targetThemeName = themeData[userTheme].name;
-            title.innerText = `請選取所有包含${targetThemeName}的圖片`;
+            const themes = Object.keys(themeData);
+            const userTheme = themes[Math.floor(Math.random() * themes.length)];
+            currentTargetThemeName = themeData[userTheme].name;
+            title.innerText = `請選取所有包含${currentTargetThemeName}的圖片`;
 
             let images = [];
             // 固定 3 張目標圖片
@@ -736,13 +728,12 @@
         }
 
         function verify2FA() {
-            let targetThemeName = themeData[pendingUser.theme || 'cat'].name;
             if (captchaSelected.length > 0 && captchaSelected.length === captchaCorrectIndices.length &&
                 captchaCorrectIndices.every(val => captchaSelected.includes(val))) {
                 document.getElementById('two-factor-modal').style.display = 'none';
                 completeLogin(pendingUser);
             } else {
-                alert(`驗證失敗：您沒有正確選取所有包含 ${targetThemeName} 的圖片，請再試一次。`);
+                alert(`驗證失敗：您沒有正確選取所有包含 ${currentTargetThemeName} 的圖片，請再試一次。`);
                 show2FAModal();
             }
         }
