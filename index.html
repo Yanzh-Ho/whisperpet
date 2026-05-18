@@ -434,31 +434,39 @@
 
         <!-- 首頁 (Home View) -->
         <div id="home-view" class="view">
-            <div class="header-flex">
-                <h2>歡迎來到 Pet Whisper</h2>
-            </div>
-            <p style="margin-bottom: 20px; color: var(--text-muted);">發掘最新動態，探索可愛寵物的溫馨時刻。</p>
-
-            <div class="carousel-container">
+            <div class="carousel-container"
+                style="height: calc(100vh - 74px); margin: 0; border-radius: 0; box-shadow: none;">
                 <div class="carousel-slide active"
-                    style="background-image: url('file:///C:/Users/jerry/.gemini/antigravity/brain/f22b1f37-15f1-402f-a390-41163a0d8dfb/carousel_img_1_1779115917486.png');">
-                    <div class="carousel-overlay">
-                        <h2>享受陽光</h2>
-                        <p>與活潑的毛小孩一起度過美好的戶外時光</p>
+                    style="background-image: url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');">
+                    <div class="carousel-overlay"
+                        style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.5);">
+                        <h2 style="font-size: 3.5rem; margin-bottom: 20px; font-weight: bold;">歡迎來到 Pet Whisper</h2>
+                        <p style="font-size: 1.5rem; margin-bottom: 40px; color: #EEE;">與活潑的毛小孩一起度過美好的時光</p>
+                        <button class="btn"
+                            style="padding: 15px 40px; font-size: 1.2rem; border-radius: 30px; background-color: var(--primary-dark);"
+                            onclick="switchView('feed-view')">開始你的寵物交流之旅</button>
                     </div>
                 </div>
                 <div class="carousel-slide"
-                    style="background-image: url('file:///C:/Users/jerry/.gemini/antigravity/brain/f22b1f37-15f1-402f-a390-41163a0d8dfb/carousel_img_2_1779115931479.png');">
-                    <div class="carousel-overlay">
-                        <h2>慵懶午後</h2>
-                        <p>最舒適的角落，記錄喵星人的每個甜睡瞬間</p>
+                    style="background-image: url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');">
+                    <div class="carousel-overlay"
+                        style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.5);">
+                        <h2 style="font-size: 3.5rem; margin-bottom: 20px; font-weight: bold;">慵懶午後</h2>
+                        <p style="font-size: 1.5rem; margin-bottom: 40px; color: #EEE;">記錄每個甜睡與陪伴的瞬間</p>
+                        <button class="btn"
+                            style="padding: 15px 40px; font-size: 1.2rem; border-radius: 30px; background-color: var(--primary-dark);"
+                            onclick="switchView('feed-view')">前往分享區</button>
                     </div>
                 </div>
                 <div class="carousel-slide"
-                    style="background-image: url('file:///C:/Users/jerry/.gemini/antigravity/brain/f22b1f37-15f1-402f-a390-41163a0d8dfb/carousel_img_3_1779115943999.png');">
-                    <div class="carousel-overlay">
-                        <h2>陪伴是最溫暖的愛</h2>
-                        <p>跨越物種的友誼，分享彼此的溫馨歲月</p>
+                    style="background-image: url('https://images.unsplash.com/photo-1543852786-1cf6624b9987?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');">
+                    <div class="carousel-overlay"
+                        style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.5);">
+                        <h2 style="font-size: 3.5rem; margin-bottom: 20px; font-weight: bold;">陪伴是最溫暖的愛</h2>
+                        <p style="font-size: 1.5rem; margin-bottom: 40px; color: #EEE;">跨越物種的友誼，分享彼此的溫馨歲月</p>
+                        <button class="btn"
+                            style="padding: 15px 40px; font-size: 1.2rem; border-radius: 30px; background-color: var(--primary-dark);"
+                            onclick="switchView('feed-view')">前往分享區</button>
                     </div>
                 </div>
 
@@ -470,12 +478,6 @@
                     <div class="dot" onclick="setCarousel(1)"></div>
                     <div class="dot" onclick="setCarousel(2)"></div>
                 </div>
-            </div>
-
-            <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;">
-                <h3 style="margin-bottom: 15px;">開始你的寵物交流之旅</h3>
-                <button class="btn" style="padding: 12px 30px; font-size: 1.1rem; border-radius: 30px;"
-                    onclick="switchView('feed-view')">前往分享區</button>
             </div>
         </div>
 
@@ -493,13 +495,17 @@
         <div id="profile-view" class="view">
             <div class="header-flex">
                 <h2>個人首頁</h2>
-                <button class="btn" onclick="switchView('create-post-view')">＋ 新增貼文</button>
+                <div>
+                    <button class="btn btn-outline" onclick="openEditProfile()"
+                        style="margin-right: 10px;">編輯個人檔案</button>
+                    <button class="btn" onclick="switchView('create-post-view')">＋ 新增貼文</button>
+                </div>
             </div>
             <div class="card"
                 style="padding: 0; overflow: hidden; margin-bottom: 40px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: var(--card-bg);">
                 <!-- 封面圖片 -->
-                <div
-                    style="width: 100%; height: 200px; background-image: url('file:///C:/Users/jerry/.gemini/antigravity/brain/f22b1f37-15f1-402f-a390-41163a0d8dfb/pet_social_cover_1779114627234.png'); background-size: cover; background-position: center;">
+                <div id="profile-cover"
+                    style="width: 100%; height: 200px; background-image: url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;">
                 </div>
                 <!-- 顯示資訊 -->
                 <div
@@ -546,6 +552,32 @@
                     <button class="btn btn-outline" onclick="switchView('profile-view')"
                         style="margin-right: 10px;">取消</button>
                     <button class="btn" onclick="submitPost()">發布貼文</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 編輯個人檔案 (Edit Profile View) -->
+        <div id="edit-profile-view" class="view">
+            <div class="card">
+                <div class="header-flex">
+                    <h2>編輯個人檔案</h2>
+                </div>
+                <div class="form-group">
+                    <label>顯示名稱</label>
+                    <input type="text" id="edit-profile-name" class="form-control" placeholder="輸入新的顯示名稱">
+                </div>
+                <div class="form-group">
+                    <label>更換大頭貼 (選填)</label>
+                    <input type="file" id="edit-profile-avatar" class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>更換背景照片 (選填)</label>
+                    <input type="file" id="edit-profile-cover" class="form-control" accept="image/*">
+                </div>
+                <div style="text-align: right; margin-top: 30px;">
+                    <button class="btn btn-outline" onclick="switchView('profile-view')"
+                        style="margin-right: 10px;">取消</button>
+                    <button class="btn" onclick="saveProfile()">儲存變更</button>
                 </div>
             </div>
         </div>
@@ -691,6 +723,17 @@
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
 
+            const container = document.querySelector('.container');
+            if (viewId === 'home-view') {
+                container.style.maxWidth = '100%';
+                container.style.margin = '0';
+                container.style.padding = '0';
+            } else {
+                container.style.maxWidth = '800px';
+                container.style.margin = '40px auto';
+                container.style.padding = '0 20px';
+            }
+
             if (viewId === 'feed-view') renderFeed();
             if (viewId === 'profile-view') {
                 if (!currentUser) return switchView('auth-view');
@@ -717,6 +760,56 @@
                 document.getElementById('login-form').style.display = 'none';
                 document.getElementById('register-form').style.display = 'block';
             }
+        }
+
+        // ==== 編輯個人檔案 ====
+        function openEditProfile() {
+            if (!currentUser) return switchView('auth-view');
+            document.getElementById('edit-profile-name').value = currentUser.name;
+            switchView('edit-profile-view');
+        }
+
+        async function saveProfile() {
+            if (!currentUser) return;
+            const newName = document.getElementById('edit-profile-name').value.trim();
+            const avatarFile = document.getElementById('edit-profile-avatar').files[0];
+            const coverFile = document.getElementById('edit-profile-cover').files[0];
+
+            if (!newName) return alert('顯示名稱不能為空');
+
+            currentUser.name = newName;
+
+            if (avatarFile) {
+                currentUser.avatar = await fileToBase64(avatarFile);
+            }
+            if (coverFile) {
+                currentUser.cover = await fileToBase64(coverFile);
+            }
+
+            // 更新 users DB
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                setDB('pet_users', users);
+            }
+
+            // 更新 posts 中的名字和頭貼 (讓舊貼文也顯示新名稱)
+            posts.forEach(post => {
+                if (post.authorId === currentUser.id) {
+                    post.authorName = currentUser.name;
+                    if (avatarFile) post.authorAvatar = currentUser.avatar;
+                }
+            });
+            setDB('pet_posts', posts);
+
+            localStorage.setItem('pet_currentUser', JSON.stringify(currentUser));
+
+            alert('個人檔案更新成功！');
+            // 清空檔案選擇器
+            document.getElementById('edit-profile-avatar').value = '';
+            document.getElementById('edit-profile-cover').value = '';
+
+            switchView('profile-view');
         }
 
         // ==== 驗證功能 (Auth) ====
@@ -969,6 +1062,13 @@
             document.getElementById('profile-avatar').src = currentUser.avatar || 'https://via.placeholder.com/80';
             document.getElementById('profile-name').innerText = currentUser.name;
             document.getElementById('profile-id').innerText = `@${currentUser.id}`;
+
+            const coverDiv = document.getElementById('profile-cover');
+            if (currentUser.cover) {
+                coverDiv.style.backgroundImage = `url('${currentUser.cover}')`;
+            } else {
+                coverDiv.style.backgroundImage = "url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')";
+            }
 
             const container = document.getElementById('profile-posts-container');
             container.innerHTML = '';
