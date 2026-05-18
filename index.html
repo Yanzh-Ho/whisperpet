@@ -317,8 +317,7 @@
     <!-- 頂部導覽列 -->
     <nav>
         <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="file:///C:/Users/jerry/.gemini/antigravity/brain/17e21314-4826-4b20-b304-17d570a4affb/pet_whisper_logo_1779089922273.png"
-                alt="Pet Whisper Logo" style="height: 40px; border-radius: 8px;">
+            <img src="./螢幕擷取畫面 2026-05-18 222741.png" alt="Pet Whisper Logo" style="height: 40px; border-radius: 8px;">
             <h1 style="display: none;">Pet Whisper</h1>
         </div>
         <div class="nav-links" id="nav-links">
@@ -345,11 +344,21 @@
                 <button class="btn" onclick="switchView('create-post-view')">＋ 新增貼文</button>
             </div>
             <div class="card"
-                style="display: flex; align-items: center; gap: 20px; margin-bottom: 40px; background: #EFEBE4;">
-                <img id="profile-avatar" src="" alt="Avatar" class="avatar" style="width: 80px; height: 80px;">
-                <div>
-                    <h3 id="profile-name" style="font-size: 1.5rem;">User Name</h3>
-                    <p id="profile-id" style="color: var(--text-muted);">@userid</p>
+                style="padding: 0; overflow: hidden; margin-bottom: 40px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: var(--card-bg);">
+                <!-- 封面圖片 -->
+                <div
+                    style="width: 100%; height: 200px; background-image: url('file:///C:/Users/jerry/.gemini/antigravity/brain/f22b1f37-15f1-402f-a390-41163a0d8dfb/pet_social_cover_1779114627234.png'); background-size: cover; background-position: center;">
+                </div>
+                <!-- 顯示資訊 -->
+                <div
+                    style="padding: 0 20px 20px 20px; margin-top: -50px; display: flex; align-items: flex-end; gap: 20px;">
+                    <img id="profile-avatar" src="" alt="Avatar" class="avatar"
+                        style="width: 100px; height: 100px; border: 4px solid var(--card-bg); background-color: var(--card-bg); margin: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; border-radius: 50%; object-fit: cover;">
+                    <div style="margin-bottom: 5px; z-index: 1;">
+                        <h3 id="profile-name" style="font-size: 1.5rem; margin: 0; color: var(--text-main);">User Name
+                        </h3>
+                        <p id="profile-id" style="color: var(--text-muted); margin: 0;">@userid</p>
+                    </div>
                 </div>
             </div>
             <h3>我的歷史貼文</h3>
