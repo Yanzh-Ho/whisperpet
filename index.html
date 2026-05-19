@@ -16,6 +16,19 @@
             --border-color: #DCD8D0;
             --card-bg: #FFFFFF;
             --btn-hover: #262320;
+            --like-color: #d9534f;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1A1A1A;
+            --primary-dark: #EAEAEA;
+            --secondary-dark: #B3B3B3;
+            --text-main: #F0F0F0;
+            --text-muted: #A0A0A0;
+            --border-color: #333333;
+            --card-bg: #242424;
+            --btn-hover: #3D3D3D;
+            --like-color: #ff6b6b;
         }
 
         * {
@@ -414,6 +427,94 @@
             background: white;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
+        /* 搜尋列 */
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            margin-bottom: 20px;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        /* 貼文輪播 */
+        .post-img-carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background-color: #FAFAFA;
+            border-top: 1px solid #F0F0F0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        [data-theme="dark"] .post-img-carousel { background-color: #111; border-color: #333; }
+        .post-img-container {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+        .post-img-item {
+            min-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+        }
+        .post-carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+        .post-carousel-btn:hover { opacity: 1; }
+        .post-carousel-btn.prev { left: 10px; }
+        .post-carousel-btn.next { right: 10px; }
+        .post-img-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* 骨架屏 Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, var(--card-bg) 25%, var(--border-color) 50%, var(--card-bg) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Hashtag */
+        .hashtag {
+            color: #1DA1F2;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .hashtag:hover { text-decoration: underline; }
     </style>
 </head>
 
@@ -486,6 +587,7 @@
             <div class="header-flex">
                 <h2>最新分享</h2>
             </div>
+            <input type="text" id="feed-search" class="search-bar" placeholder="搜尋關鍵字或 #標籤..." onkeyup="if(event.key === 'Enter') renderFeed()">
             <div id="feed-container">
                 <!-- 貼文動態生成於此 -->
             </div>
@@ -502,7 +604,7 @@
                 </div>
             </div>
             <div class="card"
-                style="padding: 0; overflow: hidden; margin-bottom: 40px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: var(--card-bg);">
+                style="padding: 0; overflow: hidden; margin-bottom: 20px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: var(--card-bg);">
                 <!-- 封面圖片 -->
                 <div id="profile-cover"
                     style="width: 100%; height: 200px; background-image: url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;">
@@ -512,15 +614,23 @@
                     style="padding: 0 20px 20px 20px; margin-top: -50px; display: flex; align-items: flex-end; gap: 20px;">
                     <img id="profile-avatar" src="" alt="Avatar" class="avatar"
                         style="width: 100px; height: 100px; border: 4px solid var(--card-bg); background-color: var(--card-bg); margin: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative; border-radius: 50%; object-fit: cover;">
-                    <div style="margin-bottom: 5px; z-index: 1;">
+                    <div style="margin-bottom: 5px; z-index: 1; flex-grow: 1;">
                         <h3 id="profile-name" style="font-size: 1.5rem; margin: 0; color: var(--text-main);">User Name
                         </h3>
                         <p id="profile-id" style="color: var(--text-muted); margin: 0;">@userid</p>
                     </div>
                 </div>
+                <!-- 追蹤資訊 -->
+                <div style="padding: 0 20px 20px 20px; display: flex; gap: 20px; color: var(--text-main);">
+                    <span><strong id="profile-following-count">0</strong> 追蹤中</span>
+                </div>
             </div>
-            <h3>我的歷史貼文</h3>
-            <br>
+
+            <div class="tabs">
+                <div class="tab active" id="tab-my-posts" onclick="setProfileTab('posts')">我的貼文</div>
+                <div class="tab" id="tab-my-bookmarks" onclick="setProfileTab('bookmarks')">我的收藏</div>
+            </div>
+
             <div id="profile-posts-container">
                 <!-- 個人貼文動態生成於此 -->
             </div>
@@ -541,12 +651,12 @@
                     <input type="text" id="post-title" class="form-control" placeholder="請輸入貼文主題">
                 </div>
                 <div class="form-group">
-                    <label>內容</label>
+                    <label>內容 (可使用 #標籤)</label>
                     <textarea id="post-content" class="form-control" rows="6" placeholder="想分享些什麼呢？"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>上傳照片 (選填)</label>
-                    <input type="file" id="post-image" class="form-control" accept="image/*">
+                    <label>上傳照片 (支援多圖，選填)</label>
+                    <input type="file" id="post-image" class="form-control" accept="image/*" multiple>
                 </div>
                 <div style="text-align: right;">
                     <button class="btn btn-outline" onclick="switchView('profile-view')"
@@ -579,6 +689,53 @@
                         style="margin-right: 10px;">取消</button>
                     <button class="btn" onclick="saveProfile()">儲存變更</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- 地圖區 (Map View) -->
+        <div id="map-view" class="view">
+            <div class="header-flex">
+                <h2>寵物友善地圖</h2>
+            </div>
+
+            <!-- 分類篩選器 -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
+                <button class="btn map-filter-btn" style="border-radius: 20px; padding: 6px 15px; white-space: nowrap;"
+                    onclick="changeMapQuery('寵物友善餐廳', this)">🍽️ 友善餐廳</button>
+                <button class="btn btn-outline map-filter-btn"
+                    style="border-radius: 20px; padding: 6px 15px; white-space: nowrap;"
+                    onclick="changeMapQuery('寵物公園', this)">🌳 寵物公園</button>
+                <button class="btn btn-outline map-filter-btn"
+                    style="border-radius: 20px; padding: 6px 15px; white-space: nowrap;"
+                    onclick="changeMapQuery('24小時動物醫院', this)">🏥 動物醫院</button>
+                <button class="btn btn-outline map-filter-btn"
+                    style="border-radius: 20px; padding: 6px 15px; white-space: nowrap;"
+                    onclick="changeMapQuery('寵物美容', this)">✂️ 寵物美容</button>
+                <button class="btn btn-outline map-filter-btn"
+                    style="border-radius: 20px; padding: 6px 15px; white-space: nowrap;"
+                    onclick="changeMapQuery('寵物友善住宿', this)">🏨 友善住宿</button>
+            </div>
+
+            <div class="card"
+                style="padding: 0; overflow: hidden; height: 500px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px;">
+                <iframe id="google-map-iframe"
+                    src="https://maps.google.com/maps?q=%E5%AF%B5%E7%89%A9%E5%8F%8B%E5%96%84%E9%A4%90%E5%BB%B3&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
+            <!-- 飼主叮嚀區塊 -->
+            <div class="card"
+                style="background-color: #FAFAFA; border-left: 4px solid var(--primary-dark); padding: 25px;">
+                <h3 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 1.25rem;">
+                    💡 帶毛孩外出用餐小叮嚀
+                </h3>
+                <ul style="list-style-type: none; padding-left: 0; color: var(--text-main); line-height: 1.8;">
+                    <li style="margin-bottom: 10px;">🐾 <strong>牽繩與提籠不離身</strong>：保護寶貝的安全，也避免驚擾到其他顧客。</li>
+                    <li style="margin-bottom: 10px;">🐾 <strong>準備禮貌帶/生理褲</strong>：共同維護店家環境整潔，預防毛孩做記號的行為。</li>
+                    <li style="margin-bottom: 10px;">🐾 <strong>自備專屬寵物餐具</strong>：基於衛生考量與互相尊重，請勿讓毛孩使用人類共用的餐具。</li>
+                    <li style="margin-bottom: 10px;">🐾 <strong>適時安撫減少吠叫</strong>：若毛孩較容易緊張，請留意牠們的狀態，共同維護寧靜的用餐品質。</li>
+                    <li>🐾 <strong>不隨意餵食他人寵物</strong>：每隻毛孩的飲食禁忌不同，為了牠們的健康，餵食前請先徵求主人同意。</li>
+                </ul>
             </div>
         </div>
 
@@ -662,6 +819,62 @@
         let posts = getDB('pet_posts');
         let currentUser = JSON.parse(localStorage.getItem('pet_currentUser'));
 
+        // ==== 資料升級與相容性處理 ====
+        function migrateData() {
+            let updated = false;
+            // 升級使用者資料
+            users.forEach(u => {
+                if (!u.bookmarks) { u.bookmarks = []; updated = true; }
+                if (!u.following) { u.following = []; updated = true; }
+            });
+            if (updated) setDB('pet_users', users);
+
+            // 升級貼文資料
+            updated = false;
+            posts.forEach(p => {
+                if (p.image && !p.images) {
+                    p.images = [p.image]; // 將單圖轉為陣列
+                    delete p.image;
+                    updated = true;
+                } else if (!p.images) {
+                    p.images = [];
+                    updated = true;
+                }
+                if (typeof p.likes === 'number') {
+                    p.likedBy = []; // 重置按讚系統為陣列
+                    delete p.likes;
+                    updated = true;
+                }
+            });
+            if (updated) setDB('pet_posts', posts);
+
+            // 同步 currentUser
+            if (currentUser) {
+                const updatedUser = users.find(u => u.id === currentUser.id);
+                if (updatedUser) {
+                    currentUser = updatedUser;
+                    localStorage.setItem('pet_currentUser', JSON.stringify(currentUser));
+                }
+            }
+        }
+        migrateData(); // 載入時立即執行
+
+        // ==== 深色模式 ====
+        let isDarkMode = localStorage.getItem('pet_theme') === 'dark';
+        if (isDarkMode) document.body.setAttribute('data-theme', 'dark');
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('pet_theme', 'dark');
+            } else {
+                document.body.removeAttribute('data-theme');
+                localStorage.setItem('pet_theme', 'light');
+            }
+            updateNav();
+        }
+
         // ==== 圖片轉 Base64 工具 (加入壓縮避免 LocalStorage 爆滿) ====
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
@@ -703,17 +916,22 @@
         // ==== 介面與導覽控制 ====
         function updateNav() {
             const navLinks = document.getElementById('nav-links');
+            const themeIcon = isDarkMode ? '☀️' : '🌙';
             if (currentUser) {
                 navLinks.innerHTML = `
                     <a onclick="switchView('home-view')">首頁</a>
                     <a onclick="switchView('feed-view')">分享區</a>
+                    <a onclick="switchView('map-view')">友善地圖</a>
                     <a onclick="switchView('profile-view')">個人首頁</a>
+                    <a onclick="toggleDarkMode()" style="cursor:pointer;" title="切換主題">${themeIcon}</a>
                     <a onclick="logout()">登出</a>
                 `;
             } else {
                 navLinks.innerHTML = `
                     <a onclick="switchView('home-view')">首頁</a>
                     <a onclick="switchView('feed-view')">分享區</a>
+                    <a onclick="switchView('map-view')">友善地圖</a>
+                    <a onclick="toggleDarkMode()" style="cursor:pointer;" title="切換主題">${themeIcon}</a>
                     <a onclick="switchView('auth-view')">登入 / 註冊</a>
                 `;
             }
@@ -734,10 +952,14 @@
                 container.style.padding = '0 20px';
             }
 
-            if (viewId === 'feed-view') renderFeed();
+            if (viewId === 'feed-view') {
+                showSkeleton('feed-container');
+                setTimeout(renderFeed, 600);
+            }
             if (viewId === 'profile-view') {
                 if (!currentUser) return switchView('auth-view');
-                renderProfile();
+                showSkeleton('profile-posts-container');
+                setTimeout(renderProfile, 600);
             }
             if (viewId === 'create-post-view') {
                 if (!currentUser) return switchView('auth-view');
@@ -746,6 +968,25 @@
             }
             updateNav();
             window.scrollTo(0, 0);
+        }
+
+        function showSkeleton(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = `
+                <div class="card" style="padding: 20px;">
+                    <div style="display:flex; align-items:center; margin-bottom:15px;">
+                        <div class="skeleton" style="width:45px; height:45px; border-radius:50%; margin-right:15px;"></div>
+                        <div>
+                            <div class="skeleton" style="width:120px; height:15px; margin-bottom:8px;"></div>
+                            <div class="skeleton" style="width:80px; height:12px;"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton" style="width:100%; height:20px; margin-bottom:10px;"></div>
+                    <div class="skeleton" style="width:80%; height:20px; margin-bottom:20px;"></div>
+                    <div class="skeleton" style="width:100%; height:200px;"></div>
+                </div>
+            `;
         }
 
         function toggleAuth(mode) {
@@ -1013,9 +1254,13 @@
 
             if (!title || !content) return alert('請輸入主題與內容');
 
-            let imageData = null;
+            let imagesData = [];
             if (fileInput.files.length > 0) {
-                imageData = await fileToBase64(fileInput.files[0]);
+                // 上傳多張圖片
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    const base64 = await fileToBase64(fileInput.files[i]);
+                    imagesData.push(base64);
+                }
             }
 
             const newPost = {
@@ -1025,9 +1270,9 @@
                 authorAvatar: currentUser.avatar,
                 title: title,
                 content: content,
-                image: imageData,
+                images: imagesData,
                 timestamp: new Date().toLocaleString(),
-                likes: 0,
+                likedBy: [],
                 comments: []
             };
 
@@ -1046,22 +1291,42 @@
         // ==== 渲染畫面 (Render) ====
         function renderFeed() {
             const container = document.getElementById('feed-container');
+            const searchInput = document.getElementById('feed-search');
             container.innerHTML = '';
 
-            if (posts.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#777;">目前尚無分享，成為第一個發文的人吧！</p>';
+            let displayPosts = posts;
+            if (searchInput && searchInput.value.trim()) {
+                const keyword = searchInput.value.trim().toLowerCase();
+                displayPosts = posts.filter(p => 
+                    p.title.toLowerCase().includes(keyword) || 
+                    p.content.toLowerCase().includes(keyword) ||
+                    p.authorName.toLowerCase().includes(keyword)
+                );
+            }
+
+            if (displayPosts.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#777;">目前尚無符合的分享。</p>';
                 return;
             }
 
-            posts.forEach(post => {
+            displayPosts.forEach(post => {
                 container.appendChild(createPostHTML(post));
             });
+        }
+
+        let currentProfileTab = 'posts';
+        function setProfileTab(tab) {
+            currentProfileTab = tab;
+            document.getElementById('tab-my-posts').classList.toggle('active', tab === 'posts');
+            document.getElementById('tab-my-bookmarks').classList.toggle('active', tab === 'bookmarks');
+            renderProfile();
         }
 
         function renderProfile() {
             document.getElementById('profile-avatar').src = currentUser.avatar || 'https://via.placeholder.com/80';
             document.getElementById('profile-name').innerText = currentUser.name;
             document.getElementById('profile-id').innerText = `@${currentUser.id}`;
+            document.getElementById('profile-following-count').innerText = currentUser.following ? currentUser.following.length : 0;
 
             const coverDiv = document.getElementById('profile-cover');
             if (currentUser.cover) {
@@ -1073,24 +1338,72 @@
             const container = document.getElementById('profile-posts-container');
             container.innerHTML = '';
 
-            const myPosts = posts.filter(p => p.authorId === currentUser.id);
-            if (myPosts.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#777;">你還沒有發布過貼文喔！</p>';
+            let displayPosts = [];
+            if (currentProfileTab === 'posts') {
+                displayPosts = posts.filter(p => p.authorId === currentUser.id);
+            } else {
+                // Bookmarks
+                displayPosts = posts.filter(p => currentUser.bookmarks && currentUser.bookmarks.includes(p.postId));
+            }
+
+            if (displayPosts.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#777;">這裡還空空的喔！</p>';
                 return;
             }
 
-            myPosts.forEach(post => {
+            displayPosts.forEach(post => {
                 container.appendChild(createPostHTML(post));
             });
         }
+
+        const postImageIndices = {};
 
         function createPostHTML(post) {
             const div = document.createElement('div');
             div.className = 'post';
 
-            let imgHTML = post.image ? `<img src="${post.image}" class="post-image" alt="Post Image">` : '';
+            let imgHTML = '';
+            if (post.images && post.images.length > 0) {
+                if (postImageIndices[post.postId] === undefined) postImageIndices[post.postId] = 0;
+                const idx = postImageIndices[post.postId];
+                
+                if (post.images.length === 1) {
+                    imgHTML = `<img src="${post.images[0]}" class="post-image" alt="Post Image">`;
+                } else {
+                    imgHTML = `
+                        <div class="post-img-carousel">
+                            <div class="post-img-container" id="carousel-${post.postId}" style="transform: translateX(-${idx * 100}%);">
+                                ${post.images.map(src => `<img src="${src}" class="post-img-item" alt="Post Image">`).join('')}
+                            </div>
+                            <button class="post-carousel-btn prev" onclick="slidePostImages('${post.postId}', -1)">&#10094;</button>
+                            <button class="post-carousel-btn next" onclick="slidePostImages('${post.postId}', 1)">&#10095;</button>
+                            <div class="post-img-indicator" id="indicator-${post.postId}">${idx + 1} / ${post.images.length}</div>
+                        </div>
+                    `;
+                }
+            }
 
-            // 生成留言 HTML
+            // 處理 Hashtag
+            let formattedContent = post.content.replace(/#([\w\u4e00-\u9fa5]+)/g, '<span class="hashtag" onclick="searchHashtag(\'$1\')">#$1</span>');
+            formattedContent = formattedContent.replace(/\n/g, '<br>');
+
+            let followBtnHTML = '';
+            if (currentUser && currentUser.id !== post.authorId) {
+                const isFollowing = currentUser.following && currentUser.following.includes(post.authorId);
+                followBtnHTML = `
+                    <button class="btn ${isFollowing ? 'btn-outline' : ''}" style="padding:4px 10px; font-size:0.8rem; border-radius:15px; margin-left:auto;" onclick="toggleFollow('${post.authorId}')">
+                        ${isFollowing ? '已追蹤' : '追蹤'}
+                    </button>
+                `;
+            }
+
+            const isLiked = currentUser && post.likedBy && post.likedBy.includes(currentUser.id);
+            const likeHeart = isLiked ? '❤️' : '🤍';
+            const likeColor = isLiked ? 'color: var(--like-color);' : '';
+
+            const isBookmarked = currentUser && currentUser.bookmarks && currentUser.bookmarks.includes(post.postId);
+            const bookmarkIcon = isBookmarked ? '🏷️ 已收藏' : '🔖 收藏';
+
             let commentsHTML = post.comments.map(c => `
                 <div class="comment">
                     <img src="${c.avatar}" class="avatar">
@@ -1102,7 +1415,6 @@
                 </div>
             `).join('');
 
-            // 留言輸入框 (依照登入狀態控制)
             let commentInputHTML = currentUser ? `
                 <div class="comment-box">
                     <input type="text" id="comment-input-${post.postId}" placeholder="留言回覆...">
@@ -1110,7 +1422,6 @@
                 </div>
             ` : '';
 
-            // 刪除按鈕 (如果是當前使用者發的文)
             let deleteBtnHTML = (currentUser && currentUser.id === post.authorId) ? `
                 <button class="action-btn" onclick="deletePost('${post.postId}')" style="color: #d9534f; margin-left: auto;">
                     🗑️ 刪除
@@ -1124,18 +1435,22 @@
                         <h3>${post.authorName}</h3>
                         <span>@${post.authorId} · ${post.timestamp}</span>
                     </div>
+                    ${followBtnHTML}
                 </div>
                 <div class="post-body">
                     <div class="post-title">${post.title}</div>
-                    <div class="post-content">${post.content}</div>
+                    <div class="post-content">${formattedContent}</div>
                 </div>
                 ${imgHTML}
                 <div class="post-actions">
-                    <button class="action-btn" onclick="likePost('${post.postId}')">
-                        🤍 ${post.likes}
+                    <button class="action-btn" style="${likeColor}" onclick="likePost('${post.postId}')">
+                        ${likeHeart} ${post.likedBy ? post.likedBy.length : 0}
                     </button>
                     <button class="action-btn" onclick="focusComment('${post.postId}')">
                         💬 評論
+                    </button>
+                    <button class="action-btn" onclick="toggleBookmark('${post.postId}')">
+                        ${bookmarkIcon}
                     </button>
                     ${deleteBtnHTML}
                 </div>
@@ -1147,21 +1462,87 @@
             return div;
         }
 
-        // ==== 互動功能 (Like & Comment) ====
+        function slidePostImages(postId, step) {
+            const post = posts.find(p => p.postId === postId);
+            if (!post || !post.images) return;
+            
+            let idx = postImageIndices[postId] + step;
+            if (idx < 0) idx = post.images.length - 1;
+            if (idx >= post.images.length) idx = 0;
+            
+            postImageIndices[postId] = idx;
+            document.getElementById(`carousel-${postId}`).style.transform = `translateX(-${idx * 100}%)`;
+            document.getElementById(`indicator-${postId}`).innerText = `${idx + 1} / ${post.images.length}`;
+        }
+
+        function searchHashtag(tag) {
+            switchView('feed-view');
+            const searchInput = document.getElementById('feed-search');
+            if (searchInput) {
+                searchInput.value = '#' + tag;
+                renderFeed();
+            }
+        }
+
+        // ==== 互動功能 (Like, Comment, Follow, Bookmark) ====
         function likePost(postId) {
+            if (!currentUser) return switchView('auth-view');
             const post = posts.find(p => p.postId === postId);
             if (post) {
-                post.likes += 1;
+                if (!post.likedBy) post.likedBy = [];
+                const idx = post.likedBy.indexOf(currentUser.id);
+                if (idx > -1) {
+                    post.likedBy.splice(idx, 1);
+                } else {
+                    post.likedBy.push(currentUser.id);
+                }
                 setDB('pet_posts', posts);
-                // 重新渲染當前視圖
                 if (document.getElementById('feed-view').classList.contains('active')) renderFeed();
                 else renderProfile();
             }
         }
 
+        function toggleBookmark(postId) {
+            if (!currentUser) return switchView('auth-view');
+            if (!currentUser.bookmarks) currentUser.bookmarks = [];
+            const idx = currentUser.bookmarks.indexOf(postId);
+            if (idx > -1) {
+                currentUser.bookmarks.splice(idx, 1);
+            } else {
+                currentUser.bookmarks.push(postId);
+            }
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                setDB('pet_users', users);
+                localStorage.setItem('pet_currentUser', JSON.stringify(currentUser));
+            }
+            if (document.getElementById('feed-view').classList.contains('active')) renderFeed();
+            else renderProfile();
+        }
+
+        function toggleFollow(authorId) {
+            if (!currentUser) return switchView('auth-view');
+            if (!currentUser.following) currentUser.following = [];
+            const idx = currentUser.following.indexOf(authorId);
+            if (idx > -1) {
+                currentUser.following.splice(idx, 1);
+            } else {
+                currentUser.following.push(authorId);
+            }
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                setDB('pet_users', users);
+                localStorage.setItem('pet_currentUser', JSON.stringify(currentUser));
+            }
+            if (document.getElementById('feed-view').classList.contains('active')) renderFeed();
+            else renderProfile();
+        }
+
         function focusComment(postId) {
             if (!currentUser) {
-                if (confirm('是否有平台帳號？登入後即可參與評論！\n點擊「確定」前往登入/註冊頁面。')) {
+                if (confirm('是否有平台帳號？登入後即可參與評論！\\n點擊「確定」前往登入/註冊頁面。')) {
                     switchView('auth-view');
                 }
             } else {
@@ -1186,7 +1567,6 @@
                 });
                 setDB('pet_posts', posts);
 
-                // 重新渲染當前視圖
                 if (document.getElementById('feed-view').classList.contains('active')) renderFeed();
                 else renderProfile();
             }
@@ -1196,7 +1576,6 @@
             if (confirm('確定要刪除這篇貼文嗎？')) {
                 posts = posts.filter(p => p.postId !== postId);
                 setDB('pet_posts', posts);
-                // 重新渲染當前視圖
                 if (document.getElementById('feed-view').classList.contains('active')) renderFeed();
                 else renderProfile();
             }
@@ -1237,6 +1616,21 @@
             carouselInterval = setInterval(() => {
                 moveCarousel(1);
             }, 5000);
+        }
+
+        // ==== 地圖功能 (Map) ====
+        function changeMapQuery(query, btn) {
+            const iframe = document.getElementById('google-map-iframe');
+            iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+
+            const buttons = document.querySelectorAll('.map-filter-btn');
+            buttons.forEach(b => {
+                b.classList.remove('btn');
+                b.classList.add('btn-outline');
+            });
+
+            btn.classList.remove('btn-outline');
+            btn.classList.add('btn');
         }
 
         // ==== 系統初始化 ====
