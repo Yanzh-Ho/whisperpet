@@ -427,6 +427,7 @@
             background: white;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
+
         /* 搜尋列 */
         .search-bar {
             width: 100%;
@@ -439,10 +440,11 @@
             font-size: 1rem;
             transition: all 0.3s;
         }
+
         .search-bar:focus {
             outline: none;
             border-color: var(--primary-dark);
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
         /* 貼文輪播 */
@@ -454,21 +456,28 @@
             border-top: 1px solid #F0F0F0;
             border-bottom: 1px solid #F0F0F0;
         }
-        [data-theme="dark"] .post-img-carousel { background-color: #111; border-color: #333; }
+
+        [data-theme="dark"] .post-img-carousel {
+            background-color: #111;
+            border-color: #333;
+        }
+
         .post-img-container {
             display: flex;
             transition: transform 0.3s ease-in-out;
         }
+
         .post-img-item {
             min-width: 100%;
             max-height: 500px;
             object-fit: contain;
         }
+
         .post-carousel-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
             width: 30px;
@@ -481,15 +490,25 @@
             justify-content: center;
             opacity: 0.7;
         }
-        .post-carousel-btn:hover { opacity: 1; }
-        .post-carousel-btn.prev { left: 10px; }
-        .post-carousel-btn.next { right: 10px; }
+
+        .post-carousel-btn:hover {
+            opacity: 1;
+        }
+
+        .post-carousel-btn.prev {
+            left: 10px;
+        }
+
+        .post-carousel-btn.next {
+            right: 10px;
+        }
+
         .post-img-indicator {
             position: absolute;
             bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 2px 8px;
             border-radius: 12px;
@@ -503,9 +522,15 @@
             animation: loading 1.5s infinite;
             border-radius: 4px;
         }
+
         @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
         }
 
         /* Hashtag */
@@ -514,7 +539,10 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .hashtag:hover { text-decoration: underline; }
+
+        .hashtag:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -587,7 +615,8 @@
             <div class="header-flex">
                 <h2>最新分享</h2>
             </div>
-            <input type="text" id="feed-search" class="search-bar" placeholder="搜尋關鍵字或 #標籤..." onkeyup="if(event.key === 'Enter') renderFeed()">
+            <input type="text" id="feed-search" class="search-bar" placeholder="搜尋關鍵字或 #標籤..."
+                onkeyup="if(event.key === 'Enter') renderFeed()">
             <div id="feed-container">
                 <!-- 貼文動態生成於此 -->
             </div>
@@ -1297,8 +1326,8 @@
             let displayPosts = posts;
             if (searchInput && searchInput.value.trim()) {
                 const keyword = searchInput.value.trim().toLowerCase();
-                displayPosts = posts.filter(p => 
-                    p.title.toLowerCase().includes(keyword) || 
+                displayPosts = posts.filter(p =>
+                    p.title.toLowerCase().includes(keyword) ||
                     p.content.toLowerCase().includes(keyword) ||
                     p.authorName.toLowerCase().includes(keyword)
                 );
@@ -1366,7 +1395,7 @@
             if (post.images && post.images.length > 0) {
                 if (postImageIndices[post.postId] === undefined) postImageIndices[post.postId] = 0;
                 const idx = postImageIndices[post.postId];
-                
+
                 if (post.images.length === 1) {
                     imgHTML = `<img src="${post.images[0]}" class="post-image" alt="Post Image">`;
                 } else {
@@ -1465,11 +1494,11 @@
         function slidePostImages(postId, step) {
             const post = posts.find(p => p.postId === postId);
             if (!post || !post.images) return;
-            
+
             let idx = postImageIndices[postId] + step;
             if (idx < 0) idx = post.images.length - 1;
             if (idx >= post.images.length) idx = 0;
-            
+
             postImageIndices[postId] = idx;
             document.getElementById(`carousel-${postId}`).style.transform = `translateX(-${idx * 100}%)`;
             document.getElementById(`indicator-${postId}`).innerText = `${idx + 1} / ${post.images.length}`;
